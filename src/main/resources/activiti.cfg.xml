@@ -1,0 +1,49 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-2.5.xsd
+http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+	
+	<!-- 
+	请注意这个配置XML文件实际上是一个Spring配置文件。
+	但这并不意味着Activiti只能用于Spring环境！ -使用spring环境的话class为org.activiti.spring.SpringProcessEngineConfiguration
+	我们只是简单利用Spring内部的解析与依赖注入功能来构造引擎。
+	
+	也可以通过编程方式使用配置文件，来构造ProcessEngineConfiguration对象。
+	
+	ProcessEngineConfiguration.createProcessEngineConfigurationFromResourceDefault();
+	ProcessEngineConfiguration.createProcessEngineConfigurationFromResource(String resource);
+	ProcessEngineConfiguration.createProcessEngineConfigurationFromResource(String resource, String beanName);
+	ProcessEngineConfiguration.createProcessEngineConfigurationFromInputStream(InputStream inputStream);
+	ProcessEngineConfiguration.createProcessEngineConfigurationFromInputStream(InputStream inputStream, String beanName);
+	 -->
+	<bean id="processEngineConfiguration" class="org.activiti.engine.impl.cfg.StandaloneProcessEngineConfiguration">
+		<!-- 连接数据的配置 -->
+		<property name="jdbcDriver" value="oracle.jdbc.OracleDriver"></property>
+		<property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:ORCL"></property>
+		<property name="jdbcUsername" value="scott"></property>
+		<property name="jdbcPassword" value="tiger"></property>
+		
+		<!-- 
+		flase： 默认值。activiti在启动时，会对比数据库表中保存的版本，如果没有表或者版本不匹配，将抛出异常。
+		true： activiti会对数据库中所有表进行更新操作。如果表不存在，则自动创建。
+		create_drop： 在activiti启动时创建表，在关闭时删除表（必须手动关闭引擎，才能删除表）。
+		drop-create： 在activiti启动时删除原来的旧表，然后在创建新表（不需要手动关闭引擎）。
+		 -->
+		<property name="databaseSchemaUpdate" value="true"></property>
+		
+		<!-- 该参数将启用定时相关的功能，默认为false -->
+		<property name="jobExecutorActivate" value="false" />
+		
+		<!-- 生成流程图的字体 -->
+		<property name="activityFontName" value="宋体" />
+		<property name="labelFontName" value="宋体" />
+		
+		<!-- 主键生成策略 -->
+		<!-- <property name="idGenerator">
+		    <bean class="org.activiti.engine.impl.persistence.StrongUuidGenerator" />
+		</property> -->
+	</bean>
+
+</beans>
